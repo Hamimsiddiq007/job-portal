@@ -11,7 +11,31 @@ export const clerkWebhooks = async (req, res) => {
             "svix-signature": req.headers['svix-signature']
         })
 
-        
+        const {data, type} = req.body;
+
+        switch (type) {
+            case 'user.created': {
+                const userData = {
+                    _id: data.id,
+                    name: data.first_name + ' ' + data.last_name,
+                    email: data.email_addresses[0].email_address,
+                    image: data.image_url,
+                    resume: ''
+                }
+
+                await User.create(userData);
+                res.status(201).json({message: 'User created successfully'});
+                break;
+            }
+            case 'user.updated': {
+
+            }
+            case 'user.deleted': {
+
+            }
+            default :
+                break;
+        }
     } catch (error) {
         
     }
