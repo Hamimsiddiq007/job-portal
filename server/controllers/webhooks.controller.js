@@ -28,7 +28,15 @@ export const clerkWebhooks = async (req, res) => {
                 break;
             }
             case 'user.updated': {
+                const userData = {
+                    name: data.first_name + ' ' + data.last_name,
+                    email: data.email_addresses[0].email_address,
+                    image: data.image_url,
+                }
 
+                await User.findByIdAndUpdate(data.id, userData);
+                res.status(201).json({message: 'User updated successfully'});
+                break;
             }
             case 'user.deleted': {
 
