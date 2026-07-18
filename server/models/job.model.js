@@ -31,7 +31,7 @@ const jobSchema = new mongoose.Schema({
     },
     isVisible: {
         type: Boolean,
-        required: true
+        default: true
     },
     companyId: {
         type: mongoose.Schema.Types.ObjectId,
