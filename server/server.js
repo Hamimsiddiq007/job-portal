@@ -3,6 +3,7 @@ import cors from "cors";
 import 'dotenv/config';
 import connectBD from "./config/database.js";
 import { clerkWebhooks } from "./controllers/webhooks.controller.js";
+import companyRoutes from "./routes/company.route.js";
 
 // Initialize express
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 // Routes
 app.get("/", (req, res) => res.send("API Working!"));
 app.post('/webhooks', clerkWebhooks)
+app.use("/api/company", companyRoutes)
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
