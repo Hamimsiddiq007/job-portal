@@ -4,11 +4,13 @@ import 'dotenv/config';
 import connectBD from "./config/database.js";
 import { clerkWebhooks } from "./controllers/webhooks.controller.js";
 import companyRoutes from "./routes/company.route.js";
+import connectCloudinary from "./config/cloudinary.js";
 
 // Initialize express
 const app = express();
 
 await connectBD()
+await connectCloudinary()
 
 const PORT = process.env.PORT || 5000;
 
