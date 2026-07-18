@@ -103,7 +103,9 @@ export const companyLogin = async (req, res) => {
 export const getCompanyData = async (req, res) => {};
 
 // Post a new job
-export const postJob = async (req, res) => {};
+export const postJob = async (req, res) => {
+    const { title, location, description, salary } = req.body;
+};
 
 // Get company job applicants
 export const getJobApplicants = async (req, res) => {};
