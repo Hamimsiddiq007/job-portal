@@ -1,6 +1,7 @@
 import Company from "../models/company.model.js";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
+import generateToken from "../utils/generateToken.js";
 
 // Register new company
 export const registerCompany = async (req, res) => {
@@ -12,6 +13,16 @@ export const registerCompany = async (req, res) => {
     return res
       .status(400)
       .json({ success: false, message: "All fields are required" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: "Please provide a valid email address",
+      });
   }
 
   try {
@@ -34,19 +45,20 @@ export const registerCompany = async (req, res) => {
       image: imageUpload.secure_url,
     });
 
-    return res
-      .status(201)
-      .json({
-        success: true,
-        message: "Company registered successfully",
-        company: {
-          _id: company._id,
-          name: company.name,
-          email: company.email,
-          image: company.image,
-        },
-      });
-  } catch (error) {}
+    return res.status(201).json({
+      success: true,
+      message: "Company registered successfully",
+      company: {
+        _id: company._id,
+        name: company.name,
+        email: company.email,
+        image: company.image,
+      },
+      token: generateToken(company._id),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 // Company login
