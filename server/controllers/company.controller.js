@@ -108,6 +108,10 @@ export const postJob = async (req, res) => {
     const { title, location, description, salary, level, category } = req.body;
 
     const companyId = req.company._id;
+
+    if (!title || !location || !description || !salary || !level || !category) {
+        return res.status(400).json({ success: false, message: "All fields are required" });
+    }
     
     try {
         const newJob = new Job({
