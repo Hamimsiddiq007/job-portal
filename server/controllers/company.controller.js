@@ -1,6 +1,6 @@
 // Register new company
 export const registerCompany = async (req, res) => {
-
+    
 }
 
 // Company login
