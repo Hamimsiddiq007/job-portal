@@ -110,7 +110,6 @@ export const getCompanyData = async (req, res) => {
     const company = req.company;
 
     res.status(200).json({ success: true, company });
-
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -158,7 +157,6 @@ export const getCompanyJobs = async (req, res) => {
     const jobs = await Job.find({ companyId });
 
     res.status(200).json({ success: true, jobs });
-    
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -168,4 +166,22 @@ export const getCompanyJobs = async (req, res) => {
 export const changeApplicationStatus = async (req, res) => {};
 
 // Change job visibility
-export const changeJobVisibility = async (req, res) => {};
+export const changeJobVisibility = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    const companyId = req.company._id;
+
+    const job = await Job.findById(id);
+
+    if (companyId.toString() !== job.companyId.toString()) {
+      job.isVisible = !job.isVisible;
+    }
+
+    await job.save();
+
+    res.status(200).json({ success: true, job });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
