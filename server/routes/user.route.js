@@ -1,6 +1,6 @@
 import express from "express";
-import { applyForJob, getUserApplications, getUserData, updateUserProfile } from "../controllers/user.controller";
-import upload from "../config/multer";
+import { applyForJob, getUserApplications, getUserData, updateUserProfile } from "../controllers/user.controller.js";
+import upload from "../config/multer.js";
 
 const router = express.Router();
 
