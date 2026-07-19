@@ -23,7 +23,7 @@ app.use(express.json());
 app.get("/", (req, res) => res.send("API Working!"));
 app.post('/webhooks', clerkWebhooks)
 app.use("/api/company", companyRoutes)
-app.use("/api/job", jobRoutes)
+app.use("/api/jobs", jobRoutes)
 
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

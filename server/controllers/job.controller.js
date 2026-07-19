@@ -3,7 +3,7 @@ import Job from "../models/job.model.js";
 // Get all jobs
 export const getAllJobs = async (req, res) => {
     try {
-        const jobs =await Job.find({visible: true}).populate({path: 'companyId', select: '-password'});
+        const jobs =await Job.find({isVisible: true}).populate({path: 'companyId', select: '-password'});
 
         res.status(200).json({ success: true, jobs });
     } catch (error) {
