@@ -110,7 +110,7 @@ export const getCompanyData = async (req, res) => {
     const company = req.company;
 
     res.status(200).json({ success: true, company });
-    
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -151,7 +151,18 @@ export const postJob = async (req, res) => {
 export const getJobApplicants = async (req, res) => {};
 
 // Get company posted jobs
-export const getCompanyJobs = async (req, res) => {};
+export const getCompanyJobs = async (req, res) => {
+  try {
+    const companyId = req.company._id;
+
+    const jobs = await Job.find({ companyId });
+
+    res.status(200).json({ success: true, jobs });
+    
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 // Change job application status
 export const changeApplicationStatus = async (req, res) => {};
