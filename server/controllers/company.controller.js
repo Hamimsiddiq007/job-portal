@@ -69,69 +69,82 @@ export const registerCompany = async (req, res) => {
 
 // Company login
 export const companyLogin = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    try {
-        const company = await Company.findOne({ email });
+  try {
+    const company = await Company.findOne({ email });
 
-        if (!company) {
-            return res.status(404).json({ success: false, message: "Company not found" });
-        }
-
-        const passwordMatch = await bcrypt.compare(password, company.password);
-
-        if (!passwordMatch) {
-            return res.status(401).json({ success: false, message: "Invalid credentials" });
-        }
-
-        return res.status(200).json({
-            success: true,
-            message: "Company logged in successfully",
-            company: {
-                _id: company._id,
-                name: company.name,
-                email: company.email,
-                image: company.image,
-            },
-            token: generateToken(company._id),
-        })
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+    if (!company) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Company not found" });
     }
+
+    const passwordMatch = await bcrypt.compare(password, company.password);
+
+    if (!passwordMatch) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Company logged in successfully",
+      company: {
+        _id: company._id,
+        name: company.name,
+        email: company.email,
+        image: company.image,
+      },
+      token: generateToken(company._id),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 // Get company data
-export const getCompanyData = async (req, res) => {};
+export const getCompanyData = async (req, res) => {
+  try {
+    const company = req.company;
+
+    res.status(200).json({ success: true, company });
+    
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 // Post a new job
 export const postJob = async (req, res) => {
-    const { title, location, description, salary, level, category } = req.body;
+  const { title, location, description, salary, level, category } = req.body;
 
-    const companyId = req.company._id;
+  const companyId = req.company._id;
 
-    if (!title || !location || !description || !salary || !level || !category) {
-        return res.status(400).json({ success: false, message: "All fields are required" });
-    }
-    
-    try {
-        const newJob = new Job({
-            title,
-            description,
-            location,
-            category,
-            salary,
-            level,
-            companyId,
-            date: Date.now()
-        });
+  if (!title || !location || !description || !salary || !level || !category) {
+    return res
+      .status(400)
+      .json({ success: false, message: "All fields are required" });
+  }
 
-        await newJob.save();
-        res.status(201).json({ success: true, newJob});
+  try {
+    const newJob = new Job({
+      title,
+      description,
+      location,
+      category,
+      salary,
+      level,
+      companyId,
+      date: Date.now(),
+    });
 
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-    
+    await newJob.save();
+    res.status(201).json({ success: true, newJob });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
 
 // Get company job applicants
