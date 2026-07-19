@@ -174,7 +174,7 @@ export const changeJobVisibility = async (req, res) => {
 
     const job = await Job.findById(id);
 
-    if (companyId.toString() !== job.companyId.toString()) {
+    if (companyId.toString() === job.companyId.toString()) {
       job.isVisible = !job.isVisible;
     }
 
