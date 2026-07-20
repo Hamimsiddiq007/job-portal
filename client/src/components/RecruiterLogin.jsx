@@ -13,7 +13,7 @@ const RecruiterLogin = () => {
 
     const [isDataSubmitted, setIsDataSubmitted] = useState(false)
 
-    const {setShowRecruiterLogin} = useContext(AppContext);
+    const {setShowRecruiterLogin, backendUrl} = useContext(AppContext);
 
     const onSubmitHandler = async (e) => {
         e.preventDefault()
