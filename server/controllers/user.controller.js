@@ -1,4 +1,6 @@
+import Application from "../models/application.model.js";
 import User from "../models/user.model.js";
+import Job from "../models/job.model.js";
 
 // Get user data
 export const getUserData = async (req, res) => {
@@ -18,7 +20,34 @@ export const getUserData = async (req, res) => {
 };
 
 // Apply for a job
-export const applyForJob = async (req, res) => {};
+export const applyForJob = async (req, res) => {
+    const { jobId } = req.body;
+
+    const userId = req.auth.userId;
+    try {
+        const isApplied = await Application.findOne({jobId, userId});
+        if(isApplied) {
+            return res.status(400).json({ success: false, message: "You have already applied for this job" });
+        }
+
+        const jobData = await Job.findById(jobId);
+        if (!jobData) {
+            return res.status(404).json({ success: false, message: "Job not found" });
+        }
+
+        await Application.create({
+            companyId: jobData.companyId,
+            jobId,
+            userId,
+            date: Date.now()
+        })
+
+        res.status(200).json({ success: true, message: "Application submitted successfully" });
+        
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
 
 // Get user applications
 export const getUserApplications = async (req, res) => {};
