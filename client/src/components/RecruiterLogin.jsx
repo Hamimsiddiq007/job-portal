@@ -22,7 +22,7 @@ const RecruiterLogin = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (state === "Sign Up" && !isDataSubmitted) {
-      setIsDataSubmitted(true);
+      return setIsDataSubmitted(true);
     }
 
     try {
