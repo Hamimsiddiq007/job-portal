@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom"
-import { manageJobsData } from "../assets/assets"
+import { useNavigate } from "react-router-dom";
 import moment from "moment"
 import { useEffect, useState } from "react";
 import { useContext } from "react";
@@ -24,6 +23,19 @@ const ManageJobs = () => {
         setJob(data.jobsData.reverse());
         console.log(data.jobsData);
         
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  }
+
+  const changeJobVisibility = async (id) => {
+    try {
+      const {data} = await axios.post(backendUrl + '/api/company/change-visibility', {id}, {headers: {token: companyToken}});
+
+      if(data.success){
+        toast.success("Job visibility changed");
+        fetchJobs();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
@@ -59,7 +71,7 @@ const ManageJobs = () => {
                 <td className="px-4 py-2 border-b border-gray-300 max-sm:hidden">{job.location}</td>
                 <td className="px-4 py-2 border-b border-gray-300 text-center">{job.applicants}</td>
                 <td className="px-4 py-2 border-b border-gray-300">
-                  <input className="scale-125 ml-4" type="checkbox" />
+                  <input onChange={() => changeJobVisibility(job._id)} className="scale-125 ml-4" type="checkbox" checked = {job.isVisible} />
                 </td>
               </tr>
             ))}
