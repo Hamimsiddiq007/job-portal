@@ -7,7 +7,14 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const {companyData} = useContext(AppContext);
+  const {companyData, setCompanyData, setCompanyToken} = useContext(AppContext);
+
+  const logout = () => {
+    setCompanyToken(null);
+    setCompanyData(null);
+    localStorage.removeItem("companyToken");
+    navigate("/");
+  }
   
   return (
     <div className="min-h-screen">
@@ -21,8 +28,8 @@ const Dashboard = () => {
             <div className="relative group">
               <img className="w-8 border border-gray-300 rounded-full" src={companyData.image} alt="" />
               <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12">
-                <ul className="list-none m-0 p-2 bg-white rounded-md border border-gray-300 text-sm">
-                  <li className="py-1 px-2 cursor-pointer pr-10">Logout</li>
+                <ul className="list-none m-0 p-2 bg-gray-200 rounded-md border border-gray-600 text-sm">
+                  <li onClick={logout} className="py-1 px-2 cursor-pointer pr-10">Logout</li>
                 </ul>
               </div>
             </div>
