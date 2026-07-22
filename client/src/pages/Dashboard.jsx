@@ -1,6 +1,6 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import { assets } from "../assets/assets"
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 
 const Dashboard = () => {
@@ -15,6 +15,10 @@ const Dashboard = () => {
     localStorage.removeItem("companyToken");
     navigate("/");
   }
+
+  useEffect(() => {
+    if(companyData) navigate("/dashboard/manage-jobs");
+  }, [companyData, navigate]);
   
   return (
     <div className="min-h-screen">
