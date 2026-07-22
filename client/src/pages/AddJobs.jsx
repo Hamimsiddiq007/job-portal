@@ -24,7 +24,7 @@ const AddJobs = () => {
     try {
       const description = quillRef.current.root.innerHTML;
 
-      const {data} = await axios.post(backendUrl + '/api/jobs/add', {
+      const {data} = await axios.post(backendUrl + '/api/company/post-job', {
         title,
         description,
         location,
@@ -34,13 +34,13 @@ const AddJobs = () => {
       }, {headers: {token: companyToken}});
 
       if(data.success) {
-        toast.success(data.message);
+        toast.success("Job posted successfully");
         setTitle('');
         setSalary(0);
         quillRef.current.root.innerHTML = '';
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
   }
 
@@ -96,7 +96,7 @@ const AddJobs = () => {
 
       <div className="">
         <p className='mb-2'>Salary</p>
-        <input min={0} className='w-full px-3 py-2 border-2 border-gray-300 rounded sm:w-30' onChange={e => setSalary(e.target.value)} type="Number" placeholder='Type salary' />
+        <input min={0} value={salary} className='w-full px-3 py-2 border-2 border-gray-300 rounded sm:w-30' onChange={e => setSalary(e.target.value)} type="Number" placeholder='Type salary' />
       </div>
 
       <button className='w-28 py-3 mt-4 bg-black text-white rounded'>ADD</button>
