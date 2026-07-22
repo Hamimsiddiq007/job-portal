@@ -2,11 +2,11 @@ import Application from "../models/application.model.js";
 import User from "../models/user.model.js";
 import Job from "../models/job.model.js";
 import {v2 as cloudinary} from 'cloudinary'
-
+import { getAuth } from "@clerk/express";
 
 // Get user data
 export const getUserData = async (req, res) => {
-  const userId = req.auth.userId;
+    const { userId } = getAuth(req);
 
   try {
     const user = await User.findById(userId);
