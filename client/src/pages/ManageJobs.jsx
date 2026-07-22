@@ -12,7 +12,7 @@ const ManageJobs = () => {
 
   const navigate = useNavigate();
 
-  const [jobData, setJobData] = useState(false)
+  const [job, setJob] = useState([])
 
   const {backendUrl, companyToken} = useContext(AppContext);
 
@@ -21,8 +21,8 @@ const ManageJobs = () => {
       const {data} = await axios.get(backendUrl + '/api/company/list-jobs', {headers: {token: companyToken}});
 
       if(data.success) {
-        setJobData(data.jobs.reverse());
-        console.log(data.jobs);
+        setJob(data.jobsData.reverse());
+        console.log(data.jobsData);
         
       }
     } catch (error) {
@@ -51,7 +51,7 @@ const ManageJobs = () => {
             </tr>
           </thead>
           <tbody>
-            {manageJobsData.map((job, index) => (
+            {job.map((job, index) => (
               <tr key={index} className="text-gray-700">
                 <td className="px-4 py-2 border-b border-gray-300 max-sm:hidden">{index + 1}</td>
                 <td className="px-4 py-2 border-b border-gray-300">{job.title}</td>
