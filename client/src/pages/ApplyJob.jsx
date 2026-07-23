@@ -18,8 +18,9 @@ const ApplyJob = () => {
   const {getToken} = useAuth();
 
   const [jobData, setJobData] = useState(null);
+  const [isAlreadyApplied, setIsAlreadyApplied] = useState(false);
 
-  const { jobs, backendUrl, userData, userApplications } =
+  const { jobs, backendUrl, userData, userApplications, fetchUserApplications } =
     useContext(AppContext);
 
   const fetchJob = async () => {
@@ -50,15 +51,33 @@ const ApplyJob = () => {
 
       if(data.success){
         toast.success(data.message);
+        setIsAlreadyApplied(true);
+        await fetchUserApplications();
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     }
   };
 
+  const isApplied = async () => {
+    const hasApplied = userApplications.some(item => item.jobId._id === jobData._id);
+
+    setIsAlreadyApplied(hasApplied);
+  }
+
+  useEffect(() => {
+  console.log("isAlreadyApplied:", isAlreadyApplied);
+}, [isAlreadyApplied]);
+
   useEffect(() => {
     fetchJob();
   }, [id]);
+
+  useEffect(() => {
+    if(userApplications.length > 0 && jobData){
+      isApplied();
+    }
+  }, [userApplications, jobData, id]);
 
   return jobData ? (
     <>
@@ -102,7 +121,7 @@ const ApplyJob = () => {
                 onClick={applyHandler}
                 className="bg-blue-600 p-2.5 px-10 text-white rounded"
               >
-                Apply Now
+                {isAlreadyApplied ? "Applied" : "Apply Now"}
               </button>
               <p className="mt-1 text-gray-600">
                 Posted: {moment(jobData.date).fromNow()}
@@ -121,7 +140,7 @@ const ApplyJob = () => {
                 onClick={applyHandler}
                 className="bg-blue-600 p-2.5 px-10 text-white rounded mt-10"
               >
-                Apply Now
+                {isAlreadyApplied ? "Applied" : "Apply Now"}
               </button>
             </div>
             {/* Right Section */}
