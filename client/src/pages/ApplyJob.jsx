@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import Loading from "../components/Loading";
 import Navbar from "../components/Navbar";
@@ -12,6 +12,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const ApplyJob = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [jobData, setJobData] = useState(null);
@@ -36,6 +37,7 @@ const ApplyJob = () => {
         return toast.error("Please login to apply for a job");
       }
       if(!userData.resume) {
+        navigate('/applications');
         return toast.error("Please upload your resume to apply for a job");
       }
 

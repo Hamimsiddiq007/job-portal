@@ -3,11 +3,45 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { assets, jobsApplied } from '../assets/assets'
 import moment from 'moment'
+import { useContext } from 'react'
+import { AppContext } from '../context/AppContext'
+import { useAuth, useUser } from '@clerk/clerk-react'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const Applications = () => {
 
+  const {user} = useUser();
+  const {getToken} = useAuth();
+
   const [isEdit, setIsEdit] = useState(false)
   const [resume, setResume] = useState(null)
+
+  const {backendUrl, userData, userApplications, fetchUserData} = useContext(AppContext)
+
+  const updateResume = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('resume', resume);
+
+      const token = await getToken();
+
+      const {data} = await axios.post(backendUrl + '/api/users/update-resume', formData, {headers: {Authorization: `Bearer ${token}`}});
+
+      if(data.success) {
+        toast.success('Resume updated successfully');
+        await fetchUserData();
+      }else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+
+    setIsEdit(false);
+    setResume(null);
+  }
 
   return (
     <>
