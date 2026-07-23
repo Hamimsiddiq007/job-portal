@@ -10,22 +10,25 @@ import JobCard from "../components/JobCard";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "@clerk/clerk-react";
 
 const ApplyJob = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const {getToken} = useAuth();
 
   const [jobData, setJobData] = useState(null);
 
-  const { jobs, backendUrl, userData, userApplications } = useContext(AppContext);
+  const { jobs, backendUrl, userData, userApplications } =
+    useContext(AppContext);
 
   const fetchJob = async () => {
     try {
-      const {data} = await axios.get(backendUrl + `/api/jobs/${id}`);
+      const { data } = await axios.get(backendUrl + `/api/jobs/${id}`);
 
-    if(data.success) {
-      setJobData(data.job);
-    }
+      if (data.success) {
+        setJobData(data.job);
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     }
@@ -33,22 +36,28 @@ const ApplyJob = () => {
 
   const applyHandler = async () => {
     try {
-      if(!userData) {
+      if (!userData) {
         return toast.error("Please login to apply for a job");
       }
-      if(!userData.resume) {
-        navigate('/applications');
-        return toast.error("Please upload your resume to apply for a job");
+      if (!userData.resume) {
+        navigate("/applications");
+        return toast.error("Upload your resume to apply");
       }
 
+      const token =await getToken();
 
+      const {data} = await axios.post(backendUrl + `/api/users/apply`, {jobId: jobData._id}, {headers: {Authorization: `Bearer ${token}`}});
+
+      if(data.success){
+        toast.success("Job applied successfully");
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
     }
-  }
+  };
 
   useEffect(() => {
-      fetchJob();
+    fetchJob();
   }, [id]);
 
   return jobData ? (
@@ -89,7 +98,10 @@ const ApplyJob = () => {
             </div>
 
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded">
+              <button
+                onClick={applyHandler}
+                className="bg-blue-600 p-2.5 px-10 text-white rounded"
+              >
                 Apply Now
               </button>
               <p className="mt-1 text-gray-600">
@@ -105,7 +117,10 @@ const ApplyJob = () => {
                 dangerouslySetInnerHTML={{ __html: jobData.description }}
                 className="rich-text"
               ></div>
-              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded mt-10">
+              <button
+                onClick={applyHandler}
+                className="bg-blue-600 p-2.5 px-10 text-white rounded mt-10"
+              >
                 Apply Now
               </button>
             </div>
@@ -120,13 +135,16 @@ const ApplyJob = () => {
                     job._id !== jobData._id &&
                     job.companyId._id === jobData.companyId._id,
                 )
-                .filter(() => true).slice(0, 3)
-                .map((job, index) => <JobCard key={index} job={job} />)}
+                .filter(() => true)
+                .slice(0, 3)
+                .map((job, index) => (
+                  <JobCard key={index} job={job} />
+                ))}
             </div>
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   ) : (
     <Loading />
