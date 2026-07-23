@@ -1,6 +1,33 @@
 import { assets, viewApplicationsPageData } from "../assets/assets";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const ViewApplications = () => {
+
+  const { backendUrl, companyToken } = useContext(AppContext);
+
+  const [applicants, setApplicants] = useState(false)
+
+  const fetchJobApplications = async () => {
+    try {
+      const {data} = await axios.get(backendUrl + '/api/company/job-applicants', {headers: {token: companyToken}});
+
+      if(data.success){
+        setApplicants(data.applications.reverse());
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    if(companyToken){
+      fetchJobApplications();
+    }
+  }, [companyToken])
+
   return (
     <div className="container mx-auto p-4">
       <div className="">
