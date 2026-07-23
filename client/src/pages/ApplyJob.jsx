@@ -66,10 +66,6 @@ const ApplyJob = () => {
   }
 
   useEffect(() => {
-  console.log("isAlreadyApplied:", isAlreadyApplied);
-}, [isAlreadyApplied]);
-
-  useEffect(() => {
     fetchJob();
   }, [id]);
 
@@ -154,7 +150,10 @@ const ApplyJob = () => {
                     job._id !== jobData._id &&
                     job.companyId._id === jobData.companyId._id,
                 )
-                .filter(() => true)
+                .filter(() => {
+                  const appliedjobsId = new Set(userApplications.map(app => app.jobId && app.jobId._id))
+                  return !appliedjobsId.has(jobData._id)
+                })
                 .slice(0, 3)
                 .map((job, index) => (
                   <JobCard key={index} job={job} />
