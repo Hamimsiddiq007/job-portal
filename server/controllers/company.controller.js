@@ -156,7 +156,7 @@ export const getJobApplicants = async (req, res) => {
       .populate("jobId", "title location category salary level")
       .exec();
 
-      return res.status(200).json({ success: true, applications });
+    return res.status(200).json({ success: true, applications });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -183,7 +183,17 @@ export const getCompanyJobs = async (req, res) => {
 };
 
 // Change job application status
-export const changeApplicationStatus = async (req, res) => {};
+export const changeApplicationStatus = async (req, res) => {
+  try {
+    const { id, status } = req.body;
+
+    await Application.findOneAndUpdate({ _id: id }, { status });
+
+    res.status(200).json({ success: true, message: "Status changed" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 // Change job visibility
 export const changeJobVisibility = async (req, res) => {
