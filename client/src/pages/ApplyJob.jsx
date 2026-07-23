@@ -49,7 +49,7 @@ const ApplyJob = () => {
       const {data} = await axios.post(backendUrl + `/api/users/apply`, {jobId: jobData._id}, {headers: {Authorization: `Bearer ${token}`}});
 
       if(data.success){
-        toast.success("Job applied successfully");
+        toast.success(data.message);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
