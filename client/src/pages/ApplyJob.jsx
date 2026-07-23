@@ -16,7 +16,7 @@ const ApplyJob = () => {
 
   const [jobData, setJobData] = useState(null);
 
-  const { jobs, backendUrl } = useContext(AppContext);
+  const { jobs, backendUrl, userData, userApplications } = useContext(AppContext);
 
   const fetchJob = async () => {
     try {
@@ -29,6 +29,21 @@ const ApplyJob = () => {
       toast.error(error.response?.data?.message || error.message);
     }
   };
+
+  const applyHandler = async () => {
+    try {
+      if(!userData) {
+        return toast.error("Please login to apply for a job");
+      }
+      if(!userData.resume) {
+        return toast.error("Please upload your resume to apply for a job");
+      }
+
+
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
+  }
 
   useEffect(() => {
       fetchJob();
@@ -72,7 +87,7 @@ const ApplyJob = () => {
             </div>
 
             <div className="flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center">
-              <button className="bg-blue-600 p-2.5 px-10 text-white rounded">
+              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded">
                 Apply Now
               </button>
               <p className="mt-1 text-gray-600">
@@ -88,7 +103,7 @@ const ApplyJob = () => {
                 dangerouslySetInnerHTML={{ __html: jobData.description }}
                 className="rich-text"
               ></div>
-              <button className="bg-blue-600 p-2.5 px-10 text-white rounded mt-10">
+              <button onClick={applyHandler} className="bg-blue-600 p-2.5 px-10 text-white rounded mt-10">
                 Apply Now
               </button>
             </div>
