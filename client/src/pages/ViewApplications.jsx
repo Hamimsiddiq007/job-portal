@@ -24,6 +24,18 @@ const ViewApplications = () => {
     }
   }
 
+  const changeApplicationStatus = async (id, status) => {
+    try {
+    const {data} = await axios.post(backendUrl + '/api/company/change-status', {id, status}, {headers: {token: companyToken}});
+
+    if(data.success){
+      fetchJobApplications()
+    }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
     if(companyToken){
       fetchJobApplications();
@@ -77,10 +89,10 @@ const ViewApplications = () => {
                   <div className="relative inline-block text-left group">
                     <button className="text-gray-500 action-button cursor-pointer">...</button>
                     <div className="z-10 hidden absolute right-0 md:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block">
-                      <button className="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 cursor-pointer">
+                      <button onClick={() => changeApplicationStatus(applicant._id, 'Accepted')} className="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 cursor-pointer">
                         Accept
                       </button>
-                      <button className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer">
+                      <button onClick={() => changeApplicationStatus(applicant._id, 'Rejected')} className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100 cursor-pointer">
                         Reject
                       </button>
                     </div>
