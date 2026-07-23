@@ -27,7 +27,7 @@ export const getUserData = async (req, res) => {
 export const applyForJob = async (req, res) => {
   const { jobId } = req.body;
 
-  const userId = req.auth.userId;
+   const { userId } = getAuth(req);
   try {
     const isApplied = await Application.findOne({ jobId, userId });
     if (isApplied) {
@@ -62,7 +62,7 @@ export const applyForJob = async (req, res) => {
 // Get user applications
 export const getUserApplications = async (req, res) => {
   try {
-    const userId = req.auth.userId;
+     const { userId } = getAuth(req);
 
     const applications = await Application.find({ userId })
       .populate("companyId", "name email image")
@@ -84,8 +84,8 @@ export const getUserApplications = async (req, res) => {
 // Update user profile
 export const updateUserProfile = async (req, res) => {
     try {
-        const userId = req.auth.userId;
-        const resumeFile = req.resumeFile;
+        const { userId } = getAuth(req);
+        const resumeFile = req.file;
         const userData = await User.findById(userId);
 
         if(resumeFile){
