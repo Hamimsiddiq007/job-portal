@@ -29,7 +29,7 @@ const App = () => {
         {companyToken ? <>
           <Route path="add-jobs" element={<AddJobs/>}/>
           <Route path="manage-jobs" element={<ManageJobs/>}/>
-          <Route path="View-applications" element={<ViewApplications/>}/>
+          <Route path="view-applications" element={<ViewApplications/>}/>
         </> : null}
         </Route>
       </Routes>
